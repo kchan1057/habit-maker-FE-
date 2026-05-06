@@ -1,0 +1,17 @@
+services:
+  db:
+    image: mariadb:11.4
+    container_name: habit-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpw1234
+      MARIADB_DATABASE: habit
+      MARIADB_USER: habit
+      MARIADB_PASSWORD: habitpw1234
+    ports:
+      - "3307:3306"
+    volumes:
+      - habit-db-data:/var/lib/mysql
+
+volumes:
+  habit-db-data:
