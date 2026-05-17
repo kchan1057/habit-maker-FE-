@@ -1,6 +1,6 @@
 package com.dopamine.habitmaker.config;
 
-import com.dopamine.habitmaker.auth.jwt.JwtAuthFilter;
+import com.dopamine.habitmaker.auth.JwtAuthFilter;
 import com.dopamine.habitmaker.auth.oauth.CustomOAuth2UserService;
 import com.dopamine.habitmaker.auth.oauth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;

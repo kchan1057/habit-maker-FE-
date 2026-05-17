@@ -1,4 +1,4 @@
-package com.dopamine.habitmaker.domain.user;
+package com.dopamine.habitmaker.user.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

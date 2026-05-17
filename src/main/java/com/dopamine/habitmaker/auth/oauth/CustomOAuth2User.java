@@ -1,7 +1,7 @@
 package com.dopamine.habitmaker.auth.oauth;
 
-import com.dopamine.habitmaker.domain.user.Role;
-import com.dopamine.habitmaker.domain.user.User;
+import com.dopamine.habitmaker.user.domain.Role;
+import com.dopamine.habitmaker.user.domain.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

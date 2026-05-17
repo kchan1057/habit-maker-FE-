@@ -1,7 +1,7 @@
 package com.dopamine.habitmaker.auth.oauth;
 
-import com.dopamine.habitmaker.auth.jwt.JwtProvider;
-import com.dopamine.habitmaker.domain.user.Role;
+import com.dopamine.habitmaker.auth.JwtProvider;
+import com.dopamine.habitmaker.user.domain.Role;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

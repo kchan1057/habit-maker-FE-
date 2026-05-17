@@ -1,7 +1,7 @@
 package com.dopamine.habitmaker.auth.oauth;
 
-import com.dopamine.habitmaker.domain.user.User;
-import com.dopamine.habitmaker.domain.user.UserRepository;
+import com.dopamine.habitmaker.user.domain.User;
+import com.dopamine.habitmaker.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

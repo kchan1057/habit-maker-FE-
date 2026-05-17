@@ -1,9 +1,8 @@
-package com.dopamine.habitmaker.auth.jwt;
+package com.dopamine.habitmaker.auth;
 
-import com.dopamine.habitmaker.domain.user.Role;
+import com.dopamine.habitmaker.user.domain.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;

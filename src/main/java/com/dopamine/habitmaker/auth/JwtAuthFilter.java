@@ -1,4 +1,4 @@
-package com.dopamine.habitmaker.auth.jwt;
+package com.dopamine.habitmaker.auth;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
