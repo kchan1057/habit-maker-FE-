@@ -30,6 +30,6 @@ public class UserHabitController {
     UserHabitResponseDto response = userHabitService.saveHabit(userId, userHabitRequestDto);
     log.info("습관 저장 성공 - UserId: {}, HabitId: {}", response.userId(), response.id());
 
-    return 0;
+    return ResponseEntity.ok(response);
   }
 }

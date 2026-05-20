@@ -3,6 +3,7 @@ package com.dopamine.habitmaker.config;
 import com.dopamine.habitmaker.auth.JwtAuthFilter;
 import com.dopamine.habitmaker.auth.oauth.CustomOAuth2UserService;
 import com.dopamine.habitmaker.auth.oauth.OAuth2SuccessHandler;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -50,6 +51,16 @@ public class SecurityConfig {
                 .oauth2Login(oauth -> oauth
                         .userInfoEndpoint(u -> u.userService(customOAuth2UserService))
                         .successHandler(oAuth2SuccessHandler)
+                )
+
+                // /api/** 경로는 인증 실패 시 401 반환 (REST API용)
+                // 나머지(/, /oauth2/**, /login/** 등)는 카카오 로그인 redirect 유지
+                .exceptionHandling(ex -> ex
+                        .defaultAuthenticationEntryPointFor(
+                                (request, response, authException) ->
+                                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"),
+                                request -> request.getRequestURI().startsWith("/api/")
+                        )
                 )
 
                 // JWT 필터를 Spring 기본 인증 필터 앞에 추가

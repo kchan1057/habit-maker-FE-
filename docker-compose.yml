@@ -4,12 +4,12 @@ services:
     container_name: habit-db
     restart: unless-stopped
     environment:
-      MARIADB_ROOT_PASSWORD: rootpw1234
-      MARIADB_DATABASE: habit
-      MARIADB_USER: habit
-      MARIADB_PASSWORD: habitpw1234
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${DB_USER}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "3307:3306"
+      - "${DB_PORT}:3306"
     volumes:
       - habit-db-data:/var/lib/mysql
 
