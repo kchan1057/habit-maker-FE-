@@ -19,7 +19,7 @@ import java.io.IOException;
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JwtProvider jwtProvider;
-    private static final String REDIRECT_URL = "http://localhost:3000/oauth/callback";
+    private static final String REDIRECT_URL = "http://localhost:5173/oauth/callback";
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
