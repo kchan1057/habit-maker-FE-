@@ -1,3 +1,50 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root { color-scheme: light; }
+  html, body, #root { height: 100%; }
+  body {
+    margin: 0;
+    background: #F6F2EA;
+    color: #22211E;
+    font-family: 'Pretendard', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  * { box-sizing: border-box; }
+  ::selection { background: #CDEBD9; }
+}
+
+@layer components {
+  .card {
+    @apply bg-cream-card border border-line rounded-xl2 shadow-soft;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+  .chip-green { @apply chip bg-brand-soft text-brand-dark; }
+  .chip-mute  { @apply chip bg-cream-sink text-ink-muted; }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5
+           font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary { @apply btn bg-brand text-white hover:bg-brand-dark; }
+  .btn-ghost   { @apply btn bg-cream-sink text-ink hover:bg-cream-deep; }
+  .btn-line    { @apply btn border border-line bg-white text-ink hover:bg-cream-sink; }
+
+  .field {
+    @apply w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm text-ink
+           placeholder:text-ink-faint focus:outline-none focus:border-brand
+           focus:ring-2 focus:ring-brand/20 transition;
+  }
+  .label { @apply block text-sm font-medium text-ink-muted mb-1.5; }
+  .h-page { @apply text-2xl font-bold tracking-tight text-ink; }
+  .sub { @apply text-sm text-ink-muted; }
+}
+
+/* 얇은 스크롤바 */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #E0D9CB; border-radius: 8px; border: 3px solid #F6F2EA; }
+::-webkit-scrollbar-thumb:hover { background: #D2C9B6; }

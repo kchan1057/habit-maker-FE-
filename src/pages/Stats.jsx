@@ -1,66 +1,73 @@
 import { useEffect, useState } from 'react'
 import AppShell from '../components/AppShell'
+import Icon from '../components/Icon'
 import { api } from '../api'
 
-function Card({ label, value }) {
+function Stat({ icon, label, value, suffix }) {
   return (
-    <div className="bg-white rounded-2xl shadow-md p-5">
-      <div className="text-3xl font-bold text-purple-600">{value}</div>
-      <div className="text-sm text-gray-400 mt-1">{label}</div>
+    <div className="card p-5">
+      <div className="flex items-center gap-2 text-ink-faint mb-2"><Icon name={icon} size={18} /><span className="text-sm">{label}</span></div>
+      <div className="text-2xl font-bold">{value}<span className="text-base text-ink-muted">{suffix}</span></div>
     </div>
   )
 }
 
-function Stats() {
+export default function Stats() {
   const [data, setData] = useState(null)
   useEffect(() => { api.get('/api/stats').then(setData).catch(() => setData(null)) }, [])
+  if (!data) return <AppShell><p className="sub">불러오는 중…</p></AppShell>
 
-  if (!data) return <AppShell><p className="text-gray-400">불러오는 중…</p></AppShell>
+  const weekly = Object.entries(data.weeklyRate)
+  const cats = Object.entries(data.categoryRate)
 
   return (
     <AppShell>
-      <h2 className="text-2xl font-bold mb-4">통계 / 분석</h2>
+      <header className="mb-8">
+        <p className="sub mb-1">데이터로 보는 나의 습관</p>
+        <h1 className="h-page text-3xl">통계 분석</h1>
+      </header>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <Card label="오늘 달성률" value={`${data.overallRate}%`} />
-        <Card label="최고 연속일" value={`${data.maxStreak}일`} />
-        <Card label="총 포인트" value={`${data.totalPoints}P`} />
-        <Card label="완료한 루틴" value={`${data.completedTasks}개`} />
-      </div>
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
+        <Stat icon="target" label="오늘 달성률" value={data.overallRate} suffix="%" />
+        <Stat icon="flame" label="최고 연속일" value={data.maxStreak} suffix="일" />
+        <Stat icon="dot" label="총 포인트" value={data.totalPoints} suffix="P" />
+        <Stat icon="check" label="완료한 루틴" value={data.completedTasks} suffix="개" />
+      </section>
 
-      <div className="bg-white rounded-2xl shadow-md p-6 mb-6">
-        <h3 className="font-semibold mb-4">요일별 달성률</h3>
-        <div className="flex gap-2 items-end h-32">
-          {Object.entries(data.weeklyRate).map(([k, v]) => (
-            <div key={k} className="flex-1 flex flex-col items-center gap-1 h-full">
-              <div className="w-full flex-1 bg-gray-100 rounded-md flex items-end">
-                <div className="w-full bg-purple-500 rounded-md transition-all" style={{ height: `${v}%` }} />
-              </div>
-              <span className="text-xs text-gray-400">{k}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="bg-white rounded-2xl shadow-md p-6">
-        <h3 className="font-semibold mb-4">카테고리별 비중</h3>
-        {Object.keys(data.categoryRate).length === 0 ? (
-          <p className="text-gray-400 text-sm">데이터가 아직 없어요.</p>
-        ) : (
-          <div className="space-y-3">
-            {Object.entries(data.categoryRate).map(([k, v]) => (
-              <div key={k}>
-                <div className="flex justify-between text-sm mb-1"><span>{k}</span><span>{v}%</span></div>
-                <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-indigo-400 rounded-full" style={{ width: `${v}%` }} />
+      <div className="grid grid-cols-12 gap-5">
+        <section className="col-span-12 lg:col-span-7 card p-6">
+          <h2 className="font-bold mb-5">요일별 달성률</h2>
+          <div className="flex items-end gap-3 h-44">
+            {weekly.map(([k, v]) => (
+              <div key={k} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                <span className="text-xs text-ink-faint">{v}%</span>
+                <div className="w-full bg-cream-deep rounded-lg overflow-hidden flex items-end" style={{ height: '100%' }}>
+                  <div className="w-full bg-brand rounded-lg transition-all" style={{ height: `${v}%` }} />
                 </div>
+                <span className="text-xs text-ink-muted">{k}</span>
               </div>
             ))}
           </div>
-        )}
+        </section>
+
+        <section className="col-span-12 lg:col-span-5 card p-6">
+          <h2 className="font-bold mb-5">카테고리별 비중</h2>
+          {cats.length === 0 ? (
+            <p className="sub">아직 데이터가 없어요</p>
+          ) : (
+            <div className="space-y-4">
+              {cats.map(([k, v]) => (
+                <div key={k}>
+                  <div className="flex justify-between text-sm mb-1.5"><span className="text-ink">{k}</span><span className="text-ink-faint">{v}%</span></div>
+                  <div className="h-2.5 bg-cream-deep rounded-full overflow-hidden">
+                    <div className="h-full bg-brand-mid rounded-full transition-all" style={{ width: `${v}%` }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
     </AppShell>
   )
 }
-
-export default Stats

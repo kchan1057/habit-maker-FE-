@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import AppShell from '../components/AppShell'
+import Ring from '../components/Ring'
+import Icon from '../components/Icon'
 import { api } from '../api'
 
-function Today() {
+export default function Today() {
   const [items, setItems] = useState([])
   const [rate, setRate] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -14,9 +16,8 @@ function Today() {
     setItems(list)
     const done = list.filter((i) => i.doneToday).length
     setRate(list.length ? Math.round((done / list.length) * 100) : 0)
-    setLoading(false)
   }
-  useEffect(() => { load().catch(() => setLoading(false)) }, [])
+  useEffect(() => { load().catch(() => {}).finally(() => setLoading(false)) }, [])
 
   const toggle = async (item) => {
     setBusyId(item.id)
@@ -24,63 +25,63 @@ function Today() {
       const r = await api.post(`/api/routines/items/${item.id}/check`)
       setRate(r.achievementRate)
       if (r.newBadges?.length) {
-        setToast(`🏅 새 뱃지 획득: ${r.newBadges.join(', ')}`)
+        setToast(`새 뱃지 획득 — ${r.newBadges.join(', ')}`)
         setTimeout(() => setToast(null), 3500)
       }
       await load()
-    } finally {
-      setBusyId(null)
-    }
+    } finally { setBusyId(null) }
   }
 
   return (
     <AppShell>
-      <h2 className="text-2xl font-bold mb-4">오늘의 루틴</h2>
+      <header className="mb-8">
+        <p className="sub mb-1">한 번에 하나씩, 순서대로</p>
+        <h1 className="h-page text-3xl">오늘의 루틴</h1>
+      </header>
 
-      <div className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-2xl p-5 shadow-md mb-4">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm opacity-90">달성도 레벨</span>
-          <span className="text-2xl font-bold">{rate}%</span>
-        </div>
-        <div className="h-2.5 bg-white/30 rounded-full overflow-hidden">
-          <div className="h-full bg-white rounded-full transition-all" style={{ width: `${rate}%` }} />
-        </div>
-      </div>
-
-      {toast && <div className="bg-amber-100 text-amber-700 text-sm rounded-xl p-3 mb-4">{toast}</div>}
-
-      {loading ? (
-        <p className="text-gray-400">불러오는 중…</p>
-      ) : items.length === 0 ? (
-        <div className="bg-white rounded-2xl shadow-md p-10 text-center">
-          <p className="text-4xl mb-2">🎯</p>
-          <p className="text-gray-500">오늘 예정된 루틴이 없어요.</p>
-        </div>
-      ) : (
-        <div className="space-y-2">
-          {items.map((it) => (
-            <button
-              key={it.id}
-              onClick={() => toggle(it)}
-              disabled={busyId === it.id}
-              className={`w-full flex items-center gap-3 bg-white rounded-xl shadow-sm p-4 text-left transition hover:shadow-md disabled:opacity-50 ${
-                it.doneToday ? 'opacity-70' : ''
-              }`}
-            >
-              <span className={`w-6 h-6 rounded-md flex items-center justify-center border-2 text-xs ${
-                it.doneToday ? 'bg-purple-500 border-purple-500 text-white' : 'border-gray-300 text-transparent'
-              }`}>✓</span>
-              <div className="flex-1">
-                <div className={`font-medium ${it.doneToday ? 'line-through text-gray-400' : ''}`}>{it.title}</div>
-                <div className="text-xs text-gray-400 mt-0.5">{it.dayOfWeek} · {it.time} · {it.category}</div>
-              </div>
-              <span className="text-xs text-purple-500 font-semibold">+10p</span>
-            </button>
-          ))}
+      {toast && (
+        <div className="card px-4 py-3 mb-5 flex items-center gap-2 text-brand-dark bg-brand-soft border-brand-border">
+          <Icon name="trophy" size={18} /> {toast}
         </div>
       )}
+
+      <div className="grid grid-cols-12 gap-5">
+        <div className="col-span-12 lg:col-span-4 card p-6 flex flex-col items-center justify-center text-center">
+          <Ring value={rate} size={140} />
+          <p className="sub mt-4">완료 {items.filter((i) => i.doneToday).length} / 전체 {items.length}</p>
+        </div>
+
+        <div className="col-span-12 lg:col-span-8 card p-6">
+          {loading ? (
+            <p className="sub">불러오는 중…</p>
+          ) : items.length === 0 ? (
+            <div className="text-center py-16 text-ink-muted">오늘 예정된 루틴이 없어요</div>
+          ) : (
+            <ul className="divide-y divide-line">
+              {items.map((it, idx) => (
+                <li key={it.id}>
+                  <button onClick={() => toggle(it)} disabled={busyId === it.id}
+                    className="w-full flex items-center gap-4 py-4 text-left group disabled:opacity-50">
+                    <span className="w-6 text-sm text-ink-faint tabular-nums">{idx + 1}</span>
+                    <span className={`w-6 h-6 rounded-lg grid place-items-center border transition ${
+                      it.doneToday ? 'bg-brand border-brand text-white' : 'border-line text-transparent group-hover:border-brand-mid'
+                    }`}>
+                      <Icon name="check" size={14} stroke={2.4} />
+                    </span>
+                    <span className="flex-1">
+                      <span className={`font-medium ${it.doneToday ? 'line-through text-ink-faint' : 'text-ink'}`}>{it.title}</span>
+                      <span className="block text-xs text-ink-faint mt-0.5 flex items-center gap-1">
+                        <Icon name="clock" size={13} /> {it.time || '미정'} · {it.dayOfWeek || ''} · {it.category || '일반'}
+                      </span>
+                    </span>
+                    <span className="chip-green">+10P</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </AppShell>
   )
 }
-
-export default Today
