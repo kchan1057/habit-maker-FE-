@@ -1,5 +1,5 @@
 // 백엔드 호출 공통 헬퍼. 기존 페이지들과 동일하게 localStorage 'accessToken' 사용.
-const BASE = 'http://localhost:8080'
+const BASE = 'https://dominion-chariot-implosive.ngrok-free.dev'
 
 export function getToken() {
   return localStorage.getItem('accessToken')
@@ -11,6 +11,7 @@ async function request(path, options = {}) {
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      'ngrok-skip-browser-warning': 'true',   // ngrok 경고 페이지 우회
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers || {}),
     },
