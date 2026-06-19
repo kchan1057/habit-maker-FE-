@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { api } from '../api'
 
 const MBTI_LIST = [
   'INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP',
@@ -20,18 +21,12 @@ function Onboarding() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setSubmitting(true); setError(null)
-    const accessToken = localStorage.getItem('accessToken')
-    if (!accessToken) { navigate('/'); return }
+    if (!localStorage.getItem('accessToken')) { navigate('/'); return }
     try {
-      const res = await fetch('http://localhost:8080/api/users/me/profile', {
-        method: 'PATCH',
-        headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          mbti: form.mbti, age: parseInt(form.age, 10), job: form.job,
-          gender: form.gender, sleepTime: form.sleepTime, wakeTime: form.wakeTime,
-        }),
+      await api.patch('/api/users/me/profile', {
+        mbti: form.mbti, age: parseInt(form.age, 10), job: form.job,
+        gender: form.gender, sleepTime: form.sleepTime, wakeTime: form.wakeTime,
       })
-      if (!res.ok) { const d = await res.json().catch(() => ({})); throw new Error(d.message || `요청 실패 (${res.status})`) }
       navigate('/home')
     } catch (err) { setError(err.message) } finally { setSubmitting(false) }
   }

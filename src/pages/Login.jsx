@@ -1,6 +1,8 @@
+import { BASE } from '../api'
+
 function Login() {
   const handleKakaoLogin = () => {
-    window.location.href = 'http://localhost:8080/oauth2/authorization/kakao'
+    window.location.href = `${BASE}/oauth2/authorization/kakao`
   }
 
   return (

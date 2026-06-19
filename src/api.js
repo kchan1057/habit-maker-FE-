@@ -1,5 +1,5 @@
 // 백엔드 호출 공통 헬퍼. 기존 페이지들과 동일하게 localStorage 'accessToken' 사용.
-const BASE = 'https://dominion-chariot-implosive.ngrok-free.dev'
+export const BASE = 'https://dominion-chariot-implosive.ngrok-free.dev'
 
 export function getToken() {
   return localStorage.getItem('accessToken')

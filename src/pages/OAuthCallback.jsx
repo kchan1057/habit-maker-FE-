@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { api } from '../api'
 
 function OAuthCallback() {
   const navigate = useNavigate()
@@ -12,12 +13,9 @@ function OAuthCallback() {
     if (!accessToken) { navigate('/'); return }
 
     localStorage.setItem('accessToken', accessToken)
-    localStorage.setItem('refreshToken', refreshToken)
+    if (refreshToken) localStorage.setItem('refreshToken', refreshToken)
 
-    fetch('http://localhost:8080/api/users/me', {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    })
-      .then((res) => { if (!res.ok) throw new Error('사용자 정보 조회 실패'); return res.json() })
+    api.get('/api/users/me')
       .then((user) => navigate(user.onboardingCompleted ? '/home' : '/onboarding'))
       .catch(() => navigate('/'))
   }, [navigate])
